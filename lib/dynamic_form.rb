@@ -6,8 +6,8 @@ module DynamicForm
       @view = view
       @refresh_path = refresh_path
       @form_object_id = form_object.id
-      @form_id = form_id
-      @dom_id = "dynamic-form-" + (@form_id || form_object.model_name.singular)
+      @form_id = (form_id || form_object.model_name.singular)
+      @dom_id = "dynamic-form-" + @form_id
     end
 
     def generate(&block)
