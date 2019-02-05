@@ -2,11 +2,11 @@ require_relative 'dynamic_form/engine'
 
 module DynamicForm
   class Form
-    def initialize(view:, refresh_path:, form_object:)
+    def initialize(view:, refresh_path:, form_object:, form_id: nil)
       @view = view
       @refresh_path = refresh_path
       @form_object_id = form_object.id
-      @dom_id = "dynamic-form-" + form_object.model_name.singular
+      @dom_id = "dynamic-form-" + (form_id || form_object.model_name.singular)
     end
 
     def generate(&block)
@@ -28,6 +28,7 @@ module DynamicForm
         inputs:           @inputs,
         refresh_path:     @refresh_path,
         dom_id:           @dom_id,
+        form_id:          @form_id,
         form_object_id:   @form_object_id
       }
     end

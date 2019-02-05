@@ -11,7 +11,9 @@ function DynamicForm(options) {
     var focusedElement;
     console.log("change");
     setTimeout(function() {
-      var url = self.options.refresh_path + "?" + $("#" + self.options.dom_id + " form").serialize()
+      var url = self.options.refresh_path + "?" +
+        "form_id=" + self.options.form_id + "&" +
+        $("#" + self.options.dom_id + " form").serialize()
       if (self.options.form_object_id !== null) {
         url = url + "&form_object_id=" + self.options.form_object_id;
       }
