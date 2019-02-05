@@ -13,6 +13,12 @@ To install it, add this to your Gemfile and bundle install.
 gem 'dynamic_form'
 ```
 
+Also require the javascript piece in your application.js
+
+```
+//= require dynamic_form
+```
+
 To show how to use it, I will present a standard rails form view and show how it
 would be dynamic. Here is the starting view.
 
