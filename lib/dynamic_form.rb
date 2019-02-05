@@ -1,7 +1,7 @@
 require_relative 'dynamic_form/engine'
 
 module DynamicForm
-  class DynamicForm
+  class Form
     def initialize(view:, refresh_path:, form_id:)
       @view = view
       @refresh_path = refresh_path
