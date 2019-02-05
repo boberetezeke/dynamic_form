@@ -53,7 +53,7 @@ would be dynamic. Here is the starting view.
 
 <div class="field">
   <%= form.label :on_sale %>
-  <%= form.check_box :on_sale %>
+  <%= form.check_box :on_sale, class: 'check-box-class %>
 </div>
 
 <div class="field" id="sale_price">
@@ -86,7 +86,7 @@ would be dynamic. Here is the starting view.
 To use it in a view, you wrap your table in a block like so:
 
 ```erbruby
-<%= DynamicForm.new(view: self, refresh_path: refresh_form_widgets_path, form_id: :widget).generate do |dt| %>
+<%= DynamicForm.new(view: self, refresh_path: refresh_form_widgets_path, form_object: :widget).generate do |dt| %>
   <%= form_with(model: widget, local: true) do |form| %>
     <% if widget.errors.any? %>
       <div id="error_explanation">
@@ -102,7 +102,7 @@ To use it in a view, you wrap your table in a block like so:
 
     <div class="field">
       <%= form.label :color %>
-      <%= form.text_field :color, {"data-refresh-on" => "change"} %>
+      <%= form.text_field :color, dt.refresh_on_change %>
     </div>
 
     <div class="field">
@@ -117,7 +117,7 @@ To use it in a view, you wrap your table in a block like so:
 
     <div class="field">
       <%= form.label :on_sale %>
-      <%= form.check_box :on_sale, {"data-refresh-on" => "change"} %>
+      <%= form.check_box :on_sale, dt.refresh_on_change(class: 'check-box-class') %>
     </div>
 
     <div class="field" id="sale_price">
@@ -127,7 +127,7 @@ To use it in a view, you wrap your table in a block like so:
 
         <div class="field">
           <%= form.label :on_super_sale %>
-          <%= form.check_box :on_super_sale, {"data-refresh-on" => "change"} %>
+          <%= form.check_box :on_super_sale, dt.refresh_on_change %>
         </div>
 
         <% if form.object.on_super_sale %>
@@ -154,7 +154,12 @@ the form model, only check validations or update the in memory model as appropri
 
 ```ruby
   def refresh_form
-    @widget = Widget.new(widget_params)
+    if params[:form_object_id]
+      @widget = Widget.find(params[:form_object_id])
+      @widget.assign_attributes(widget_params)
+    else
+      @widget = Widget.new(widget_params)
+    end
     @widget.valid?
     respond_to do |format|
       format.html { render :new }

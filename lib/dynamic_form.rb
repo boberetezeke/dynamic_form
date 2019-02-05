@@ -2,14 +2,19 @@ require_relative 'dynamic_form/engine'
 
 module DynamicForm
   class Form
-    def initialize(view:, refresh_path:, form_id:)
+    def initialize(view:, refresh_path:, form_object:)
       @view = view
       @refresh_path = refresh_path
-      @id = "dynamic-form-" + form_id.to_s
+      @form_object_id = form_object.id
+      @dom_id = "dynamic-form-" + form_object.model_name.singular
     end
 
     def generate(&block)
-      ("<div id=\"#{@id}\" data-tg-refresh=\"#{@id}\">" + @view.capture(self, &block) + "</div>" + script_tag).html_safe
+      ("<div id=\"#{@dom_id}\" data-tg-refresh=\"#{@dom_id}\">" + @view.capture(self, &block) + "</div>" + script_tag).html_safe
+    end
+
+    def refresh_on_change(html_options={})
+      html_options.merge({"data-refresh-on" => "change"})
     end
 
     def script_tag
@@ -20,9 +25,10 @@ module DynamicForm
 
     def dynamic_table_options
       {
-        inputs:       @inputs,
-        refresh_path: @refresh_path,
-        id:           @id
+        inputs:           @inputs,
+        refresh_path:     @refresh_path,
+        dom_id:           @dom_id,
+        form_object_id:   @form_object_id
       }
     end
   end
