@@ -86,7 +86,7 @@ would be dynamic. Here is the starting view.
 To use it in a view, you wrap your table in a block like so:
 
 ```erbruby
-<%= DynamicForm.new(view: self, refresh_path: refresh_form_widgets_path, form_object: :widget).generate do |dt| %>
+<%= DynamicForm::Form.new(view: self, refresh_path: refresh_form_widgets_path, form_object: :widget).generate do |dt| %>
   <%= form_with(model: widget, local: true) do |form| %>
     <% if widget.errors.any? %>
       <div id="error_explanation">
@@ -153,10 +153,24 @@ refresh the form on changes in the DynamicForm argument. It shouldn't save or up
 the form model, only check validations or update the in memory model as appropriate.
 
 ```ruby
+# routes.rb
+ resources :widgets do
+   # insert the following to enable the path for the refresh form action
+   collection do
+     get refresh_form
+   end
+ end 
+```
+
+```ruby
   def refresh_form
     if params[:form_object_id]
       @widget = Widget.find(params[:form_object_id])
       @widget.assign_attributes(widget_params)
+      
+      # Use an attribute accessor if you want to distinguish between valid states when saving
+      # vs when you are editing a form 
+      # @widget.refresing_form = true
     else
       @widget = Widget.new(widget_params)
     end
