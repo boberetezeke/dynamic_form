@@ -37,6 +37,9 @@ function DynamicForm(options) {
     $(this.selector + " input[data-refresh-on='change']").each(function (index, elem) {
       $(elem).on("change", function() { self.update_page() });
     });
+    $(this.selector + " select[data-refresh-on='change']").each(function (index, elem) {
+      $(elem).on("change", function() { self.update_page() });
+    });
   };
 
   this.initialize = function() {
